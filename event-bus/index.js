@@ -12,10 +12,10 @@ app.post('/events', async (req, res) => {
 
 	await axios.post('http://posts-clusterip-srv:4000/events', event);
 	await axios.post('http://comments-srv:4001/events', event);
-	await axios.post('http://moderation-srv:4002/events', event);
-	await axios.post('http://query-srv:4003/events', event);
+	await axios.post('http://moderation-srv:4003/events', event);
+	await axios.post('http://query-srv:4002/events', event);
 
-	res.status(201);
+	res.status(201).send({ status: 'OK' });
 });
 
 app.get('/events', (req, res) => {

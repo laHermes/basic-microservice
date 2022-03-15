@@ -26,5 +26,5 @@ spec:
   ports:
     - name: moderation
       protocol: TCP
-      port: 4002
-      targetPort: 4002
+      port: 4003
+      targetPort: 4003
