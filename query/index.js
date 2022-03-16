@@ -11,7 +11,6 @@ const posts = {};
 const handleEvent = (type, data) => {
 	if (type === 'PostCreated') {
 		const { id, title } = data;
-		console.log('postCreated', data);
 		//create a post
 		posts[id] = {
 			id,
@@ -19,21 +18,28 @@ const handleEvent = (type, data) => {
 			comments: [],
 		};
 	}
+
 	if (type === 'CommentCreated') {
 		const { id, content, postId, status } = data;
+
+		const post = posts[postId];
 		//add a comment
-		posts[postId].comments.push({ id, content, status });
+		if (post?.comments) {
+			posts[postId].comments.push({ id, content, status });
+		}
 	}
 
 	if (type === 'CommentModerated') {
-		const { postId, id, status } = data;
+		const { postId, id, status, content } = data;
 
 		const post = posts[postId];
 
-		const comment = post.comments.find((comment) => comment.id === id);
-		//update a comment
-		comment.status = status;
-		comment.content = content;
+		if (post?.comments) {
+			const comment = post.comments.find((comment) => comment.id === id);
+			//update a comment
+			comment.status = status;
+			comment.content = content;
+		}
 	}
 };
 
@@ -54,7 +60,7 @@ app.listen(4002, async () => {
 		.get('http://event-bus-srv:4005/events')
 		.catch((err) => console.log);
 
-	if (res.data instanceof Array) {
+	if (res.data) {
 		//iterates stored events events
 		for (let event of res.data) {
 			handleEvent(event.type, event.data);

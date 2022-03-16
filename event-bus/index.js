@@ -10,7 +10,6 @@ app.post('/events', async (req, res) => {
 	const event = req.body;
 	events.push(event);
 
-	console.log(event);
 	await axios
 		.post('http://posts-clusterip-srv:4000/events', event)
 		.catch((error) => console.log);
@@ -28,7 +27,7 @@ app.post('/events', async (req, res) => {
 });
 
 app.get('/events', (req, res) => {
-	res.send(events);
+	res.send(events.reverse());
 });
 
 app.listen(4005, () => {
