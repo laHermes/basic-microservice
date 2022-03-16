@@ -13,25 +13,28 @@ app.get('/posts', (req: express.Request, res: express.Response) => {
 	res.send(posts);
 });
 
-app.post('/posts', async (req: express.Request, res: express.Response) => {
-	const id = randomBytes(4).toString('hex');
-	const { title } = req.body;
+app.post(
+	'/posts/create',
+	async (req: express.Request, res: express.Response) => {
+		const id = randomBytes(4).toString('hex');
+		const { title } = req.body;
 
-	posts[id] = {
-		id,
-		title,
-	};
-
-	await axios.post('http://event-bus-srv:4005/events', {
-		type: 'PostCreated',
-		data: {
+		posts[id] = {
 			id,
 			title,
-		},
-	});
+		};
 
-	res.status(201).send(posts[id]);
-});
+		await axios.post('http://event-bus-srv:4005/events', {
+			type: 'PostCreated',
+			data: {
+				id,
+				title,
+			},
+		});
+
+		res.status(201).send(posts[id]);
+	}
+);
 
 app.post('/events', (req, res) => {
 	console.log('received Event', req.body.type);

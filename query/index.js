@@ -11,6 +11,7 @@ const posts = {};
 const handleEvent = (type, data) => {
 	if (type === 'PostCreated') {
 		const { id, title } = data;
+		console.log('postCreated', data);
 		//create a post
 		posts[id] = {
 			id,
@@ -42,7 +43,6 @@ app.get('/posts', (req, res) => {
 
 app.post('/events', (req, res) => {
 	const { type, data } = req.body;
-
 	handleEvent(type, data);
 	res.send({});
 });
@@ -50,10 +50,14 @@ app.post('/events', (req, res) => {
 app.listen(4002, async () => {
 	console.log('Listening on 4002');
 	// get stored events
-	const res = await axios.get('http://event-bus-srv:4005/events');
-	//iterates stored events events
-	for (let event of res.data) {
-		console.log('processing event', event.type);
-		handleEvent(event.type, event.data);
+	const res = await axios
+		.get('http://event-bus-srv:4005/events')
+		.catch((err) => console.log);
+
+	if (res.data instanceof Array) {
+		//iterates stored events events
+		for (let event of res.data) {
+			handleEvent(event.type, event.data);
+		}
 	}
 });

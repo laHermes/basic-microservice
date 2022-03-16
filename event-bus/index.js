@@ -10,10 +10,19 @@ app.post('/events', async (req, res) => {
 	const event = req.body;
 	events.push(event);
 
-	await axios.post('http://posts-clusterip-srv:4000/events', event);
-	await axios.post('http://comments-srv:4001/events', event);
-	await axios.post('http://moderation-srv:4003/events', event);
-	await axios.post('http://query-srv:4002/events', event);
+	console.log(event);
+	await axios
+		.post('http://posts-clusterip-srv:4000/events', event)
+		.catch((error) => console.log);
+	await axios
+		.post('http://comments-srv:4001/events', event)
+		.catch((error) => console.log);
+	await axios
+		.post('http://moderation-srv:4003/events', event)
+		.catch((error) => console.log);
+	await axios
+		.post('http://query-srv:4002/events', event)
+		.catch((error) => console.log);
 
 	res.status(201).send({ status: 'OK' });
 });

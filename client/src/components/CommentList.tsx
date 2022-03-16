@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import react from 'react';
 
 const CommentList = ({ comments }: any) => {
 	return (
@@ -17,7 +17,6 @@ const CommentList = ({ comments }: any) => {
 						</div>
 					);
 				})}
-			)
 		</div>
 	);
 };
